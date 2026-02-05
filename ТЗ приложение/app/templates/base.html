@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="ru">
+<head>
+    <meta charset="utf-8">
+    <title>{% block title %}Генератор разделов ТЗ{% endblock %}</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<script src="{{ url_for('static', filename='js/main.js') }}"></script>
+<body>
+<header class="site-header">
+    <div class="container">
+        <h1 class="site-title">
+            <a href="{{ url_for('main.index') }}">
+                Генератор разделов ТЗ по ГОСТ&nbsp;19.201-78
+            </a>
+        </h1>
+        <p class="site-subtitle">
+            Преддипломная практика · ЧОУ ВО «Московский университет имени С.&nbsp;Ю.&nbsp;Витте»
+        </p>
+        <nav class="main-nav">
+            <a href="{{ url_for('main.index') }}"
+               class="{% if request.endpoint == 'main.index' %}active{% endif %}">
+                Главная
+            </a>
+            <a href="{{ url_for('main.history') }}"
+               class="{% if request.endpoint in (
+                         'main.history',
+                         'main.build_document',
+                         'main.download_document'
+                       ) %}active{% endif %}">
+                Журнал / ТЗ
+            </a>
+            <a href="{{ url_for('main.about') }}"
+               class="{% if request.endpoint == 'main.about' %}active{% endif %}">
+                О сервисе
+            </a>
+        </nav>
+    </div>
+</header>
+
+<main class="site-main">
+    <div class="container">
+        {% block content %}{% endblock %}
+    </div>
+</main>
+
+<footer class="site-footer">
+    <div class="container">
+        <p class="footer-line">
+            Разработано в рамках преддипломной практики по теме
+            «Разработка системы для автоматизированного формирования
+            технического задания в соответствии с ГОСТ&nbsp;19.201-78
+            (на примере ЧОУ ВО „Московский университет имени С.&nbsp;Ю.&nbsp;Витте“)».
+        </p>
+        <p class="footer-line">
+            Студент: ФИО, группа ХХХХ · Руководитель: ФИО, должность
+        </p>
+    </div>
+</footer>
+</body>
+</html>

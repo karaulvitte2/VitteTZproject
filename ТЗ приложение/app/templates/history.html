@@ -1,0 +1,189 @@
+{% extends "base.html" %}
+
+{% block title %}Генератор разделов ТЗ · Журнал и документы{% endblock %}
+
+{% block content %}
+<article class="panel">
+    <h2>Журнал генерации разделов ТЗ</h2>
+    <p class="panel-intro">
+        На этой странице отображаются сохранённые в базе данных результаты генерации
+        отдельных разделов технического задания. Из выбранных записей можно собрать
+        единый документ ТЗ и выгрузить его в формате DOCX.
+    </p>
+
+    {% if history_entries and history_entries|length > 0 %}
+        <form method="post" action="{{ url_for('main.build_document') }}" class="history-form">
+            <div class="history-table-wrapper">
+                <table class="table-history">
+                    <thead>
+                    <tr>
+                        <th style="width: 2rem;">
+                            <!-- Чекбокс "выбрать всё" можно будет оживить JS, если захочешь -->
+                            #
+                        </th>
+                        <th>Дата и время</th>
+                        <th>Проект</th>
+                        <th>Раздел ТЗ</th>
+                        <th>Режим</th>
+                        <th>Фрагмент текста</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for entry in history_entries %}
+                        <tr>
+                            <td>
+                                <input type="checkbox"
+                                       name="log_ids"
+                                       value="{{ entry.id }}">
+                            </td>
+                            <td>
+                                {{ entry.created_at.strftime("%d.%m.%Y %H:%M") if entry.created_at else "" }}
+                            </td>
+                            <td>
+                                {{ entry.project_name }}
+                                {% if entry.project_domain %}
+                                    <br>
+                                    <span class="text-muted small">
+                                        ({{ entry.project_domain }})
+                                    </span>
+                                {% endif %}
+                            </td>
+                            <td>{{ entry.section_name }}</td>
+                            <td>{{ entry.mode }}</td>
+                            <td>
+                                {% set txt = entry.generated_text or "" %}
+                                {% if txt|length > 200 %}
+                                    {{ txt[:200] }}…
+                                {% else %}
+                                    {{ txt }}
+                                {% endif %}
+                            </td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+
+            <section class="panel panel-sub">
+                <h3>Сборка документа ТЗ из выбранных частей</h3>
+                <p class="panel-intro">
+                    Отметьте галочками те разделы, которые нужно включить в общий документ.
+                    Ниже укажите параметры итогового ТЗ. При формировании DOCX разделы
+                    будут отсортированы в логичном порядке («Основания для разработки»,
+                    «Назначение системы», «Требования к системе» и т.&nbsp;д.).
+                </p>
+
+                <div class="form-block">
+                    <div class="form-row">
+                        <label for="doc_title">Название документа ТЗ:</label>
+                        <input type="text"
+                               id="doc_title"
+                               name="doc_title"
+                               value="{{ doc_title|default('', true) }}"
+                               placeholder="Например: Техническое задание на разработку ИС учета сотрудников">
+                    </div>
+
+                    <div class="form-row">
+                        <label for="doc_project_name">Проект (для титульного листа):</label>
+                        <input type="text"
+                               id="doc_project_name"
+                               name="doc_project_name"
+                               value="{{ doc_project_name|default('', true) }}"
+                               placeholder="Например: Система учета сотрудников МУИВ">
+                    </div>
+
+                    <div class="form-row">
+                        <label for="doc_project_domain">Предметная область:</label>
+                        <input type="text"
+                               id="doc_project_domain"
+                               name="doc_project_domain"
+                               value="{{ doc_project_domain|default('', true) }}"
+                               placeholder="Например: кадровый учет в вузе">
+                    </div>
+
+                    <div class="form-row">
+                        <label for="doc_comment">Примечание (необязательно):</label>
+                        <textarea id="doc_comment"
+                                  name="doc_comment"
+                                  rows="3"
+                                  placeholder="Например: Черновая версия ТЗ для согласования с заказчиком.">{{ doc_comment|default('', true) }}</textarea>
+                    </div>
+                </div>
+
+                <div class="form-actions">
+                    <button type="submit" class="btn-primary">
+                        Сформировать ТЗ и скачать DOCX
+                    </button>
+                </div>
+            </section>
+        </form>
+    {% else %}
+        <p>
+            В базе данных пока нет записей журнала. Сначала сгенерируйте несколько разделов ТЗ
+            на главной странице, после чего они появятся здесь для последующей сборки.
+        </p>
+    {% endif %}
+</article>
+
+{% if documents and documents|length > 0 %}
+<article class="panel">
+    <h2>Ранее сформированные документы ТЗ</h2>
+    <p class="panel-intro">
+        Ниже приведён список ранее собранных документов ТЗ. При необходимости можно
+        повторно выгрузить их в виде DOCX-файлов.
+    </p>
+
+    <div class="history-table-wrapper">
+        <table class="table-history">
+            <thead>
+            <tr>
+                <th>ID</th>
+                <th>Дата и время</th>
+                <th>Название документа</th>
+                <th>Проект</th>
+                <th>Примечание</th>
+                <th>Действие</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for doc in documents %}
+                <tr>
+                    <td>{{ doc.id }}</td>
+                    <td>
+                        {{ doc.created_at.strftime("%d.%m.%Y %H:%M") if doc.created_at else "" }}
+                    </td>
+                    <td>{{ doc.title }}</td>
+                    <td>
+                        {{ doc.project_name }}
+                        {% if doc.project_domain %}
+                            <br>
+                            <span class="text-muted small">
+                                ({{ doc.project_domain }})
+                            </span>
+                        {% endif %}
+                    </td>
+                    <td>
+                        {% if doc.comment %}
+                            {% if doc.comment|length > 120 %}
+                                {{ doc.comment[:120] }}…
+                            {% else %}
+                                {{ doc.comment }}
+                            {% endif %}
+                        {% else %}
+                            &mdash;
+                        {% endif %}
+                    </td>
+                    <td class="doc-actions">
+                        <a href="{{ url_for('main.download_document', document_id=doc.id) }}"
+                           class="btn-link">
+                            Скачать DOCX
+                        </a>
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</article>
+{% endif %}
+{% endblock %}

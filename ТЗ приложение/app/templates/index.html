@@ -1,0 +1,133 @@
+{% extends "base.html" %}
+
+{% block title %}Генератор разделов ТЗ · Главная{% endblock %}
+
+{% block content %}
+<article class="panel">
+    <h2>Формирование разделов технического задания</h2>
+    <p class="panel-intro">
+        Ниже представлена форма для задания параметров информационной системы
+        и выбора раздела технического задания по ГОСТ&nbsp;19.201-78. 
+        Сервис использует комбинированный подход: прямое обращение к LLM и
+        поиск релевантных фрагментов ГОСТ и методических материалов (RAG).
+    </p>
+
+    <form method="post" action="{{ url_for('main.generate') }}" class="tz-form">
+        <fieldset class="form-block">
+            <legend>1. Проект</legend>
+
+            <div class="form-row">
+                <label for="project_id">Тестовый проект:</label>
+                <select name="project_id" id="project_id">
+                    <option value="">— ввести параметры проекта вручную —</option>
+                    {% for p in projects %}
+                        <option value="{{ p.id }}"
+                                {% if p.id == selected_project_id %}selected{% endif %}>
+                            {{ p.name }} ({{ p.domain }})
+                        </option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div class="form-row">
+                <label for="project_name">Название проекта:</label>
+                <input type="text"
+                       id="project_name"
+                       name="project_name"
+                       value="{{ project_name }}"
+                       placeholder="Например: Система учета сотрудников МУИВ">
+            </div>
+
+            <div class="form-row">
+                <label for="project_domain">Предметная область:</label>
+                <input type="text"
+                       id="project_domain"
+                       name="project_domain"
+                       value="{{ project_domain }}"
+                       placeholder="Например: учет кадров в вузе">
+            </div>
+
+            <div class="form-row">
+                <label for="project_description">Краткое описание проекта:</label>
+                <textarea id="project_description"
+                          name="project_description"
+                          rows="6"
+                          placeholder="Опишите назначение системы, основные функции, пользователей и особенности внедрения.">{{ project_description }}</textarea>
+            </div>
+        </fieldset>
+
+        <fieldset class="form-block">
+            <legend>2. Параметры генерации</legend>
+
+            <div class="form-row">
+                <label for="section_name">Раздел технического задания:</label>
+                <select name="section_name" id="section_name">
+                    {% for section in tz_sections %}
+                        <option value="{{ section }}"
+                                {% if section == selected_section %}selected{% endif %}>
+                            {{ section }}
+                        </option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div class="form-row">
+                <span class="form-label">Режим работы:</span>
+                <div class="radio-group">
+                    {% for m in tz_modes %}
+                        <label class="radio-option">
+                            <input type="radio"
+                                   name="mode"
+                                   value="{{ m }}"
+                                   {% if m == selected_mode %}checked{% endif %}>
+                            {% if m == "baseline" %}
+                                Без RAG (baseline)
+                            {% elif m == "rag_gost" %}
+                                RAG по ГОСТ (рекомендуется)
+                            {% elif m == "rag_full" %}
+                                RAG по всем источникам
+                            {% else %}
+                                {{ m }}
+                            {% endif %}
+                        </label>
+                    {% endfor %}
+                </div>
+            </div>
+        </fieldset>
+
+        <div class="form-actions">
+            <button type="submit" class="btn-primary">
+                Сгенерировать раздел ТЗ
+            </button>
+        </div>
+    </form>
+</article>
+
+{% if generated_text %}
+<article class="panel result-panel">
+    <h2>Сгенерированный раздел ТЗ</h2>
+    <p class="result-meta">
+        Раздел: <strong>{{ selected_section }}</strong>,
+        режим: <strong>{{ selected_mode }}</strong>
+        {% if selected_project_id %}
+            · проект: <strong>{{ project_name }}</strong>
+        {% endif %}
+    </p>
+
+    <div class="generated-text">
+        <pre>{{ generated_text }}</pre>
+    </div>
+
+    {% if used_chunks and used_chunks|length > 0 %}
+        <details class="used-chunks">
+            <summary>Использованные фрагменты корпуса ({{ used_chunks|length }})</summary>
+            <ul>
+                {% for cid in used_chunks %}
+                    <li>{{ cid }}</li>
+                {% endfor %}
+            </ul>
+        </details>
+    {% endif %}
+</article>
+{% endif %}
+{% endblock %}
