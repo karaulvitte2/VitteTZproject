@@ -1,0 +1,29 @@
+{
+  "llm": {
+    "model_name": "gpt-4o-mini",
+    "proxyapi_base_url": "https://openai.api.proxyapi.ru/v1"
+  },
+  "rag": {
+    "mode_default": "rag_gost",
+    "top_k_chunks_default": 8,
+    "rag_corpus_path": "rag_corpus/rag_corpus_chunks.jsonl",
+    "tfidf_vectorizer_path": "flask_artifacts/tfidf_vectorizer.joblib",
+    "tfidf_matrix_path": "flask_artifacts/tfidf_matrix.joblib",
+    "modes": {
+      "baseline": {
+        "use_rag": false,
+        "allowed_source_types": null
+      },
+      "rag_gost": {
+        "use_rag": true,
+        "allowed_source_types": [
+          "gost"
+        ]
+      },
+      "rag_full": {
+        "use_rag": true,
+        "allowed_source_types": null
+      }
+    }
+  }
+}
