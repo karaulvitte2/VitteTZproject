@@ -1,0 +1,618 @@
+/* ==========================================================================
+   ГЛОБАЛЬНЫЕ НАСТРОЙКИ И ТЕМАТИКА
+   ========================================================================== */
+
+:root {
+    --bg-body: #050816;
+    --bg-elevated: #0f172a;
+    --bg-elevated-soft: #0b1220;
+    --bg-header: linear-gradient(135deg, #111827, #020617);
+    --bg-footer: #020617;
+
+    --border-subtle: rgba(148, 163, 184, 0.25);
+
+    --accent: #3b82f6;
+    --accent-soft: rgba(59, 130, 246, 0.06);
+    --accent-strong: #2563eb;
+    --accent-alt: #8b5cf6;
+
+    --text-main: #e5e7eb;
+    --text-muted: #9ca3af;
+    --text-soft: #6b7280;
+    --text-strong: #f9fafb;
+    --danger: #ef4444;
+
+    --radius-xs: 4px;
+    --radius-sm: 6px;
+    --radius-md: 10px;
+    --radius-lg: 14px;
+    --radius-pill: 999px;
+
+    --shadow-soft: 0 16px 40px rgba(15, 23, 42, 0.5);
+    --shadow-subtle: 0 10px 25px rgba(15, 23, 42, 0.4);
+
+    --transition-fast: 0.15s ease-out;
+    --transition-med: 0.25s ease-out;
+}
+
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+}
+
+html {
+    font-size: 16px;
+}
+
+body {
+    margin: 0;
+    padding: 0;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
+        Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue",
+        sans-serif;
+    line-height: 1.5;
+    color: var(--text-main);
+    background: radial-gradient(circle at top, #0f172a 0, #020617 40%, #020617 100%);
+    min-height: 100vh;
+}
+
+/* Убираем стандартный фокус и задаём свой */
+
+:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+}
+
+/* ==========================================================================
+   КОНТЕЙНЕР И БАЗОВАЯ СЕТКА
+   ========================================================================== */
+
+.container {
+    max-width: 1120px;
+    margin: 0 auto;
+    padding: 0 1.25rem;
+}
+
+/* ==========================================================================
+   ШАПКА
+   ========================================================================== */
+
+.site-header {
+    background: var(--bg-header);
+    color: var(--text-main);
+    padding: 1.5rem 0 1rem 0;
+    border-bottom: 1px solid rgba(148, 163, 184, 0.3);
+    box-shadow: 0 18px 40px rgba(15, 23, 42, 0.6);
+    position: sticky;
+    top: 0;
+    z-index: 20;
+    backdrop-filter: blur(18px);
+}
+
+.site-title {
+    margin: 0 0 0.35rem 0;
+    font-size: 1.5rem;
+    letter-spacing: 0.03em;
+}
+
+.site-title a {
+    color: var(--text-strong);
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+}
+
+.site-title a::before {
+    content: "";
+    width: 0.75rem;
+    height: 0.75rem;
+    border-radius: 50%;
+    background: radial-gradient(circle at 30% 30%, #60a5fa, #a855f7 60%, transparent 70%);
+    box-shadow: 0 0 20px rgba(56, 189, 248, 0.75);
+}
+
+.site-title a:hover {
+    text-decoration: underline;
+}
+
+.site-subtitle {
+    margin: 0;
+    font-size: 0.9rem;
+    color: var(--text-muted);
+}
+
+/* ==========================================================================
+   НАВИГАЦИЯ
+   ========================================================================== */
+
+.main-nav {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-top: 0.85rem;
+}
+
+.main-nav a {
+    color: var(--text-main);
+    text-decoration: none;
+    font-size: 0.92rem;
+    padding: 0.35rem 0.9rem;
+    border-radius: var(--radius-pill);
+    border: 1px solid transparent;
+    background: rgba(15, 23, 42, 0.8);
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    transition: background var(--transition-fast), border-color var(--transition-fast),
+        color var(--transition-fast), transform var(--transition-fast),
+        box-shadow var(--transition-fast);
+}
+
+.main-nav a:hover {
+    background: var(--accent-soft);
+    border-color: rgba(59, 130, 246, 0.6);
+    transform: translateY(-1px);
+    box-shadow: 0 8px 20px rgba(15, 23, 42, 0.5);
+}
+
+.main-nav a.active {
+    background: linear-gradient(135deg, var(--accent), var(--accent-alt));
+    border-color: transparent;
+    color: #f9fafb;
+    box-shadow: 0 0 0 1px rgba(191, 219, 254, 0.5), 0 10px 20px rgba(37, 99, 235, 0.6);
+}
+
+/* ==========================================================================
+   ОСНОВНОЙ КОНТЕНТ
+   ========================================================================== */
+
+.site-main {
+    padding: 1.75rem 0 2.75rem 0;
+}
+
+/* ==========================================================================
+   ПАНЕЛИ (КАРТОЧКИ)
+   ========================================================================== */
+
+.panel {
+    background: radial-gradient(circle at top left, rgba(59, 130, 246, 0.09), transparent 55%),
+                radial-gradient(circle at bottom right, rgba(129, 140, 248, 0.12), transparent 60%),
+                var(--bg-elevated);
+    border-radius: var(--radius-lg);
+    padding: 1.6rem 1.75rem 1.75rem 1.75rem;
+    margin-bottom: 1.6rem;
+    box-shadow: var(--shadow-soft);
+    border: 1px solid rgba(148, 163, 184, 0.35);
+    position: relative;
+    overflow: hidden;
+}
+
+.panel::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background: radial-gradient(circle at top right, rgba(96, 165, 250, 0.15), transparent 60%);
+    opacity: 0.4;
+    mix-blend-mode: screen;
+}
+
+.panel h2 {
+    position: relative;
+    margin-top: 0;
+    margin-bottom: 0.6rem;
+    font-size: 1.35rem;
+    letter-spacing: 0.02em;
+    color: var(--text-strong);
+}
+
+.panel h3 {
+    position: relative;
+    margin-top: 1.1rem;
+    margin-bottom: 0.4rem;
+    font-size: 1.05rem;
+    color: var(--text-strong);
+}
+
+.panel-intro {
+    position: relative;
+    margin-top: 0;
+    margin-bottom: 1.25rem;
+    color: var(--text-soft);
+    font-size: 0.97rem;
+}
+
+/* Вложенные панели (подразделы на history.html) */
+
+.panel-sub {
+    background: rgba(15, 23, 42, 0.9);
+    border-radius: var(--radius-md);
+    border: 1px solid var(--border-subtle);
+    margin-top: 1.3rem;
+    box-shadow: var(--shadow-subtle);
+}
+
+/* ==========================================================================
+   ФОРМЫ
+   ========================================================================== */
+
+.tz-form {
+    display: block;
+}
+
+.form-block {
+    border-radius: var(--radius-md);
+    padding: 1.1rem 1.25rem 1.25rem 1.25rem;
+    margin-bottom: 1rem;
+    background: rgba(15, 23, 42, 0.88);
+    border: 1px solid var(--border-subtle);
+}
+
+.form-block legend {
+    padding: 0 0.6rem;
+    font-weight: 600;
+    color: var(--text-strong);
+    font-size: 0.95rem;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+}
+
+.form-row {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 0.75rem;
+}
+
+.form-row label,
+.form-label {
+    font-weight: 500;
+    font-size: 0.94rem;
+    margin-bottom: 0.25rem;
+    color: var(--text-main);
+}
+
+.form-row input[type="text"],
+.form-row select,
+.form-row textarea {
+    padding: 0.45rem 0.6rem;
+    border-radius: var(--radius-sm);
+    border: 1px solid rgba(148, 163, 184, 0.7);
+    font-size: 0.95rem;
+    font-family: inherit;
+    background: rgba(15, 23, 42, 0.95);
+    color: var(--text-main);
+    transition: border-color var(--transition-fast),
+                box-shadow var(--transition-fast),
+                background var(--transition-fast),
+                transform var(--transition-fast);
+}
+
+.form-row textarea {
+    resize: vertical;
+    min-height: 5rem;
+}
+
+.form-row input[type="text"]::placeholder,
+.form-row textarea::placeholder {
+    color: rgba(148, 163, 184, 0.7);
+}
+
+.form-row input[type="text"]:focus,
+.form-row select:focus,
+.form-row textarea:focus {
+    outline: none;
+    border-color: var(--accent);
+    box-shadow: 0 0 0 1px rgba(59, 130, 246, 0.6), 0 0 0 8px rgba(59, 130, 246, 0.2);
+    background: #020617;
+    transform: translateY(-0.5px);
+}
+
+/* Радиокнопки */
+
+.radio-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.3rem;
+}
+
+.radio-option {
+    font-size: 0.94rem;
+    color: var(--text-main);
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.25rem 0.4rem;
+    border-radius: var(--radius-sm);
+    transition: background var(--transition-fast), transform var(--transition-fast);
+}
+
+.radio-option:hover {
+    background: rgba(15, 23, 42, 0.9);
+    transform: translateY(-0.5px);
+}
+
+.radio-option input[type="radio"] {
+    accent-color: var(--accent);
+}
+
+/* ==========================================================================
+   КНОПКИ
+   ========================================================================== */
+
+.form-actions {
+    margin-top: 0.9rem;
+    text-align: right;
+}
+
+.btn-primary {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.35rem;
+    padding: 0.45rem 1.2rem;
+    font-size: 0.95rem;
+    font-weight: 600;
+    border-radius: var(--radius-pill);
+    border: none;
+    cursor: pointer;
+    background: linear-gradient(135deg, var(--accent-strong), var(--accent-alt));
+    color: #f9fafb;
+    box-shadow: 0 12px 30px rgba(37, 99, 235, 0.65);
+    transition: transform var(--transition-med), box-shadow var(--transition-med),
+                filter var(--transition-med);
+}
+
+.btn-primary::after {
+    content: "↗";
+    font-size: 0.85em;
+    opacity: 0.85;
+}
+
+.btn-primary:hover {
+    transform: translateY(-1px) translateZ(0);
+    box-shadow: 0 18px 40px rgba(37, 99, 235, 0.8);
+    filter: brightness(1.05);
+}
+
+.btn-primary:active {
+    transform: translateY(1px);
+    box-shadow: 0 6px 18px rgba(37, 99, 235, 0.6);
+}
+
+/* Ссылки-кнопки (в истории документов) */
+
+.btn-link {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.25rem 0.8rem;
+    border-radius: var(--radius-pill);
+    border: 1px solid rgba(148, 163, 184, 0.7);
+    color: var(--accent);
+    text-decoration: none;
+    font-size: 0.9rem;
+    transition: background var(--transition-fast),
+                border-color var(--transition-fast),
+                color var(--transition-fast),
+                transform var(--transition-fast);
+}
+
+.btn-link:hover {
+    background: rgba(15, 23, 42, 0.9);
+    border-color: var(--accent);
+    color: #bfdbfe;
+    transform: translateY(-0.5px);
+}
+
+/* ==========================================================================
+   РЕЗУЛЬТАТ ГЕНЕРАЦИИ
+   ========================================================================== */
+
+.result-panel {
+    border-top: 2px solid rgba(59, 130, 246, 0.7);
+    position: relative;
+}
+
+.result-panel::after {
+    content: "";
+    position: absolute;
+    inset-inline: 0;
+    top: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(59, 130, 246, 0.9), transparent);
+    opacity: 0.7;
+}
+
+.result-meta {
+    margin-top: 0;
+    margin-bottom: 0.75rem;
+    font-size: 0.9rem;
+    color: var(--text-soft);
+}
+
+.generated-text {
+    background: radial-gradient(circle at top left, #020617, #020617);
+    color: #e5e7eb;
+    border-radius: var(--radius-md);
+    padding: 0.75rem 0.9rem;
+    overflow-x: auto;
+    font-size: 0.9rem;
+    border: 1px solid rgba(30, 64, 175, 0.9);
+    box-shadow: 0 14px 30px rgba(15, 23, 42, 0.7);
+}
+
+.generated-text pre {
+    margin: 0;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+    font-family: "JetBrains Mono", "Fira Code", Consolas, "Courier New", monospace;
+}
+
+/* Блок с использованными чанками */
+
+.used-chunks {
+    margin-top: 0.75rem;
+    font-size: 0.9rem;
+}
+
+.used-chunks summary {
+    cursor: pointer;
+    color: #93c5fd;
+    text-decoration: underline;
+    text-underline-offset: 2px;
+}
+
+.used-chunks summary:hover {
+    color: #bfdbfe;
+}
+
+.used-chunks ul {
+    margin: 0.5rem 0 0 1.1rem;
+    padding: 0;
+}
+
+/* ==========================================================================
+   ТАБЛИЦЫ ЖУРНАЛА / ДОКУМЕНТОВ
+   ========================================================================== */
+
+.history-table-wrapper {
+    margin-top: 0.5rem;
+    border-radius: var(--radius-md);
+    border: 1px solid var(--border-subtle);
+    overflow: hidden;
+    background: rgba(15, 23, 42, 0.95);
+    box-shadow: var(--shadow-subtle);
+    max-height: 420px;
+    overflow-y: auto;
+}
+
+.table-history {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.88rem;
+}
+
+.table-history thead {
+    position: sticky;
+    top: 0;
+    z-index: 5;
+    background: linear-gradient(90deg, #020617, #0b1120);
+}
+
+.table-history th,
+.table-history td {
+    padding: 0.45rem 0.6rem;
+    border-bottom: 1px solid rgba(31, 41, 55, 0.9);
+    vertical-align: top;
+}
+
+.table-history th {
+    text-align: left;
+    font-weight: 600;
+    color: var(--text-muted);
+    font-size: 0.84rem;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+}
+
+.table-history tbody tr {
+    transition: background var(--transition-fast), transform var(--transition-fast);
+}
+
+.table-history tbody tr:nth-child(2n) {
+    background: rgba(15, 23, 42, 0.75);
+}
+
+.table-history tbody tr:hover {
+    background: rgba(30, 64, 175, 0.18);
+    transform: translateY(-1px);
+}
+
+.table-history td:first-child,
+.table-history th:first-child {
+    text-align: center;
+    width: 2.2rem;
+}
+
+/* Столбец "Действие" */
+
+.doc-actions {
+    text-align: right;
+}
+
+/* Текстовые утилиты */
+
+.text-muted {
+    color: var(--text-muted);
+}
+
+.small {
+    font-size: 0.8rem;
+    opacity: 0.85;
+}
+
+/* ==========================================================================
+   ПОДВАЛ
+   ========================================================================== */
+
+.site-footer {
+    background: var(--bg-footer);
+    color: var(--text-muted);
+    padding: 0.9rem 0 1.2rem 0;
+    font-size: 0.85rem;
+    border-top: 1px solid rgba(55, 65, 81, 0.9);
+    box-shadow: 0 -10px 30px rgba(15, 23, 42, 0.8);
+}
+
+.footer-line {
+    margin: 0.1rem 0;
+}
+
+/* ==========================================================================
+   АДАПТИВНОСТЬ
+   ========================================================================== */
+
+@media (min-width: 768px) {
+    .form-row {
+        flex-direction: row;
+        align-items: center;
+    }
+
+    .form-row label,
+    .form-label {
+        width: 30%;
+        margin-bottom: 0;
+        padding-right: 0.75rem;
+        text-align: right;
+    }
+
+    .form-row input[type="text"],
+    .form-row select,
+    .form-row textarea {
+        width: 70%;
+    }
+
+    .radio-group {
+        width: 70%;
+    }
+}
+
+@media (max-width: 640px) {
+    .panel {
+        padding: 1.25rem 1.15rem 1.4rem 1.15rem;
+    }
+
+    .site-header {
+        padding-inline: 0.25rem;
+    }
+
+    .history-table-wrapper {
+        max-height: 320px;
+    }
+
+    .main-nav {
+        gap: 0.35rem;
+    }
+}
